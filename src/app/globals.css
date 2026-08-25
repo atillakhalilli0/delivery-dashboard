@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   Design Tokens
+   ========================================================= */
+
+:root {
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+
+  --canvas: #f1f2f5;
+  --surface: #ffffff;
+  --raised: #fafbfc;
+  --border: #e3e5ea;
+  --ink: #12161f;
+  --muted: #5b6474;
+  --faint: #9198a6;
+}
+
+.dark {
+  --canvas: #0a0d13;
+  --surface: #11141c;
+  --raised: #161a23;
+  --border: #232834;
+  --ink: #e8eaf0;
+  --muted: #8b93a6;
+  --faint: #565f72;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--ink);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* =========================================================
+   Custom Scrollbar
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--faint);
+}
+
+/* =========================================================
+   Grid Texture
+   Used behind map + hero panels
+   ========================================================= */
+
+.grid-texture {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+
+  background-size: 28px 28px;
+}
+
+/* =========================================================
+   Diagonal Texture
+   ========================================================= */
+
+.diagonal-texture {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--border) 0,
+    var(--border) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+/* =========================================================
+   Typography Utilities
+   ========================================================= */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Reduced Motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
