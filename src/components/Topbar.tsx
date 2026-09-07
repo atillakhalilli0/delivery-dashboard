@@ -37,14 +37,6 @@ export default function Topbar({ onOpenMobileNav }: { onOpenMobileNav: () => voi
         </div>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <div className="relative hidden sm:block">
-            <TbSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[15px] text-faint" />
-            <input
-              type="text"
-              placeholder="Search delivery, driver, plate…"
-              className="w-56 cursor-text rounded-lg border border-border bg-raised py-2 pl-9 pr-3 text-[13px] text-ink placeholder:text-faint focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/15 lg:w-72"
-            />
-          </div>
 
           <div className="relative">
             <button
@@ -58,7 +50,7 @@ export default function Topbar({ onOpenMobileNav }: { onOpenMobileNav: () => voi
             {notifOpen && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setNotifOpen(false)} />
-                <div className="animate-slide-up absolute right-0 z-20 mt-2 w-72 rounded-xl border border-border bg-surface p-2 shadow-pop">
+                <div className="animate-slide-up absolute right-0 z-20 mt-2 w-72 rounded-xl border border-border bg-surface p-2 shadow-pop bg-slate-200/80 dark:bg-slate-900/90">
                   <p className="px-2.5 py-2 text-[11px] font-semibold uppercase tracking-wide text-faint">
                     Recent alerts
                   </p>

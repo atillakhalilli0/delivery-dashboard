@@ -33,7 +33,7 @@ export default function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border bg-surface transition-transform duration-300 ease-out lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border bg-surface transition-transform bg-slate-200 dark:bg-slate-900 duration-300 ease-out lg:translate-x-0 ${
         mobileOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >

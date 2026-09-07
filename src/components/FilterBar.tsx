@@ -35,7 +35,7 @@ export default function FilterBar({ search, onSearch, activeStatus, onStatus, pr
             value={search}
             onChange={(e) => onSearch(e.target.value)}
             placeholder="Search by ID, customer, or destination…"
-            className="w-full cursor-text rounded-lg border border-border bg-raised py-2.5 pl-9 pr-3 text-[13px] placeholder:text-faint focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/15"
+            className="w-full cursor-text rounded-lg border border-border bg-raised py-2.5 pl-9 pr-3 text-[13px] placeholder:text-faint focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/15 placeholder:text-faint dark:placeholder:text-gray-400"
           />
         </div>
         <select
@@ -43,10 +43,21 @@ export default function FilterBar({ search, onSearch, activeStatus, onStatus, pr
           onChange={(e) => onPriority(e.target.value as Priority | "All")}
           className="cursor-pointer rounded-lg border border-border bg-raised px-3 py-2.5 text-[13px] font-medium text-muted focus:outline-none sm:w-44"
         >
-          <option value="All">All priorities</option>
-          <option value="Standard">Standard</option>
-          <option value="Express">Express</option>
-          <option value="Critical">Critical</option>
+          <option className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white" value="All">
+            All priorities
+          </option>
+
+          <option className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white" value="Standard">
+            Standard
+          </option>
+
+          <option className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white" value="Express">
+            Express
+          </option>
+
+          <option className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white" value="Critical">
+            Critical
+          </option>
         </select>
         {hasFilters && (
           <button

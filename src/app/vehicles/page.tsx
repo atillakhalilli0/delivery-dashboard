@@ -43,7 +43,7 @@ export default function VehiclesPage() {
           className="cursor-pointer rounded-lg border border-border bg-raised px-3 py-2.5 text-[13px] font-medium text-muted focus:outline-none sm:w-48"
         >
           {TYPES.map((t) => (
-            <option key={t} value={t}>
+            <option className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white" key={t} value={t}>
               {t === "All" ? "All vehicle types" : t}
             </option>
           ))}
@@ -126,7 +126,7 @@ export default function VehiclesPage() {
         })}
       </div>
 
-      <Modal open={!!selected} onClose={() => setSelected(null)} widthClass="max-w-lg">
+      <Modal open={!!selected} onClose={() => setSelected(null)} widthClass="max-w-lg bg-slate-200/80 dark:bg-slate-900/90">
         {selected && (
           <div>
             <div className="flex items-start justify-between">

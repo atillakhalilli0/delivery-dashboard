@@ -12,7 +12,7 @@ export default function DriverDetail({ driver }: { driver: Driver }) {
   const maxDeliveries = Math.max(...driver.history.map((h) => h.deliveries));
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-slate-200/80 dark:bg-slate-900/90">
       <div className="border-b border-border px-6 py-5">
         <div className="flex items-center gap-3">
           <div

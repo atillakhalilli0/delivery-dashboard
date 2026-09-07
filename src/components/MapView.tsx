@@ -61,11 +61,40 @@ export default function MapView() {
             onChange={(e) => setStatusFilter(e.target.value as Driver["status"] | "All")}
             className="cursor-pointer rounded-full border border-border bg-surface/90 px-3 py-1.5 text-[11.5px] font-medium text-muted shadow-sm backdrop-blur focus:outline-none"
           >
-            <option value="All">All statuses</option>
-            <option value="On route">On route</option>
-            <option value="Idle">Idle</option>
-            <option value="Break">Break</option>
-            <option value="Off duty">Off duty</option>
+            <option
+              value="All"
+              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+            >
+              All statuses
+            </option>
+
+            <option
+              value="On route"
+              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+            >
+              On route
+            </option>
+
+            <option
+              value="Idle"
+              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+            >
+              Idle
+            </option>
+
+            <option
+              value="Break"
+              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+            >
+              Break
+            </option>
+
+            <option
+              value="Off duty"
+              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+            >
+              Off duty
+            </option>
           </select>
         </div>
 
