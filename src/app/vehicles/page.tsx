@@ -23,8 +23,6 @@ export default function VehiclesPage() {
     });
   }, [search, type]);
 
-  const selectedDriver = getDriverById(selected?.driverId ?? null);
-
   return (
     <div className="animate-fade-in space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -126,7 +124,7 @@ export default function VehiclesPage() {
         })}
       </div>
 
-      <Modal open={!!selected} onClose={() => setSelected(null)} widthClass="max-w-lg bg-slate-200/80 dark:bg-slate-900/90">
+      <Modal open={!!selected} onClose={() => setSelected(null)} widthClass="max-w-lg">
         {selected && (
           <div>
             <div className="flex items-start justify-between">

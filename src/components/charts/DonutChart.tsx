@@ -16,18 +16,22 @@ export default function DonutChart({ segments }: { segments: Segment[] }) {
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  let cumulative = 0;
+  const segmentsWithOffsets = segments.reduce<
+    Array<Segment & { dash: number; offset: number; cumulativeAfter: number }>
+  >((acc, s) => {
+      const priorSum = acc.length > 0 ? acc[acc.length - 1].cumulativeAfter : 0;
+      const fraction = s.value / total;
+      const dash = fraction * circumference;
+      const offset = circumference - (priorSum / total) * circumference;
+      return [...acc, { ...s, dash, offset, cumulativeAfter: priorSum + s.value }];
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:gap-8">
       <div className="relative shrink-0" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
           <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--border)" strokeWidth={stroke} />
-          {segments.map((s, i) => {
-            const fraction = s.value / total;
-            const dash = fraction * circumference;
-            const offset = circumference - (cumulative / total) * circumference;
-            cumulative += s.value;
+          {segmentsWithOffsets.map((s, i) => {
             return (
               <motion.circle
                 key={s.label}
@@ -38,9 +42,9 @@ export default function DonutChart({ segments }: { segments: Segment[] }) {
                 stroke={s.color}
                 strokeWidth={stroke}
                 strokeLinecap="butt"
-                strokeDasharray={`${dash} ${circumference - dash}`}
+                strokeDasharray={`${s.dash} ${circumference - s.dash}`}
                 initial={{ strokeDashoffset: circumference, opacity: 0 }}
-                animate={{ strokeDashoffset: offset, opacity: 1 }}
+                animate={{ strokeDashoffset: s.offset, opacity: 1 }}
                 transition={{ duration: 0.9, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               />
             );

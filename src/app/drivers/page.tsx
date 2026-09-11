@@ -33,7 +33,7 @@ export default function DriversPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search drivers or region…"
-            className="w-full cursor-text rounded-lg border border-border bg-raised py-2.5 pl-9 pr-3 text-[13px] placeholder:text-faint focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/15 placeholder:text-faint dark:placeholder:text-gray-400"
+            className="w-full cursor-text rounded-lg border border-border bg-raised py-2.5 pl-9 pr-3 text-[13px] placeholder:text-faint focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/15"
           />
         </div>
         <div className="flex flex-wrap gap-2">

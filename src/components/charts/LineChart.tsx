@@ -33,7 +33,7 @@ export default function LineChart({ data, unit = "min" }: { data: Point[]; unit?
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full min-w-[420px]" style={{ height }}>
         <defs>
           <linearGradient id="lineFade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--tw-gradient-from, #2FB6A6)" stopOpacity="0.28" />
+            <stop offset="0%" stopColor="#2FB6A6" stopOpacity="0.28" />
             <stop offset="100%" stopColor="#2FB6A6" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -68,7 +68,7 @@ export default function LineChart({ data, unit = "min" }: { data: Point[]; unit?
         />
         {points.map((p, i) => (
           <motion.g key={p.label} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 + i * 0.07 }}>
-            <circle cx={p.x} cy={p.y} r={4} fill="#0A0D13" stroke="#2FB6A6" strokeWidth={2} />
+            <circle cx={p.x} cy={p.y} r={4} fill="var(--surface)" stroke="#2FB6A6" strokeWidth={2} />
             <text x={p.x} y={height - 4} textAnchor="middle" className="fill-current text-[10px]" fill="var(--faint)">
               {p.label}
             </text>

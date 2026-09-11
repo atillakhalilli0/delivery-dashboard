@@ -20,6 +20,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "light" || stored === "dark") {
+      // Intentional: syncing the one-time initial value from localStorage
+      // (an external system) into React state after mount. Reading it
+      // during render would break SSR/hydration, since localStorage isn't
+      // available on the server.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(stored);
     }
     setMounted(true);

@@ -12,7 +12,7 @@ export default function DriverDetail({ driver }: { driver: Driver }) {
   const maxDeliveries = Math.max(...driver.history.map((h) => h.deliveries));
 
   return (
-    <div className="flex h-full flex-col bg-slate-200/80 dark:bg-slate-900/90">
+    <div className="flex h-full flex-col bg-surface">
       <div className="border-b border-border px-6 py-5">
         <div className="flex items-center gap-3">
           <div
@@ -83,7 +83,7 @@ export default function DriverDetail({ driver }: { driver: Driver }) {
         </section>
 
         <section>
-          <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-faint">Today's route</p>
+          <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-faint">Today&apos;s route</p>
           <ol className="space-y-0">
             {routeStops.length === 0 && (
               <p className="text-[12.5px] text-muted">No stops assigned yet today.</p>

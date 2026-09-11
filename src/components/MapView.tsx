@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  TbPlus,
-  TbMinus,
-  TbFocus2,
   TbTruck,
   TbPackage,
   TbX,
@@ -17,20 +15,21 @@ import { drivers, deliveries, getVehicleById } from "@/lib/mockData";
 import type { Driver } from "@/lib/types";
 import { DriverStatusBadge } from "./StatusBadge";
 
-// Fixed abstract "road network" — decorative paths over the grid canvas.
-const ROADS = [
-  "M 0 18 L 100 22",
-  "M 0 52 L 100 46",
-  "M 0 82 L 100 78",
-  "M 14 0 L 10 100",
-  "M 46 0 L 52 100",
-  "M 78 0 L 74 100",
-  "M 0 35 L 40 35 L 55 60 L 100 60",
-  "M 20 0 L 20 30 L 60 30 L 60 100",
-];
+// Leaflet touches `window` at module load time, which crashes during
+// server-side rendering — load it only in the browser.
+const LeafletMap = dynamic(() => import("./LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center bg-canvas">
+      <div className="flex flex-col items-center gap-2 text-faint">
+        <TbTruck className="animate-pulse text-[24px]" />
+        <p className="text-[12px]">Loading live map…</p>
+      </div>
+    </div>
+  ),
+});
 
 export default function MapView() {
-  const [zoom, setZoom] = useState(1);
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
   const [showDrivers, setShowDrivers] = useState(true);
   const [showDeliveries, setShowDeliveries] = useState(true);
@@ -53,7 +52,7 @@ export default function MapView() {
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_300px]">
       <div className="relative h-[560px] overflow-hidden rounded-xl border border-border bg-canvas sm:h-[640px]">
         {/* Filter bar */}
-        <div className="absolute left-3 top-3 z-20 flex flex-wrap items-center gap-2">
+        <div className="absolute left-3 top-3 z-[500] flex flex-wrap items-center gap-2">
           <FilterToggle active={showDrivers} onClick={() => setShowDrivers((v) => !v)} icon={TbTruck} label="Drivers" />
           <FilterToggle active={showDeliveries} onClick={() => setShowDeliveries((v) => !v)} icon={TbPackage} label="Deliveries" />
           <select
@@ -61,142 +60,33 @@ export default function MapView() {
             onChange={(e) => setStatusFilter(e.target.value as Driver["status"] | "All")}
             className="cursor-pointer rounded-full border border-border bg-surface/90 px-3 py-1.5 text-[11.5px] font-medium text-muted shadow-sm backdrop-blur focus:outline-none"
           >
-            <option
-              value="All"
-              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
-            >
+            <option value="All" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
               All statuses
             </option>
-
-            <option
-              value="On route"
-              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
-            >
+            <option value="On route" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
               On route
             </option>
-
-            <option
-              value="Idle"
-              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
-            >
+            <option value="Idle" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
               Idle
             </option>
-
-            <option
-              value="Break"
-              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
-            >
+            <option value="Break" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
               Break
             </option>
-
-            <option
-              value="Off duty"
-              className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
-            >
+            <option value="Off duty" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
               Off duty
             </option>
           </select>
         </div>
 
-        {/* Zoom controls */}
-        <div className="absolute bottom-3 right-3 z-20 flex flex-col overflow-hidden rounded-lg border border-border bg-surface/90 shadow-sm backdrop-blur">
-          <button
-            onClick={() => setZoom((z) => Math.min(2.2, +(z + 0.2).toFixed(1)))}
-            className="cursor-pointer border-b border-border p-2.5 text-muted transition-colors hover:text-ink"
-            aria-label="Zoom in"
-          >
-            <TbPlus className="text-[15px]" />
-          </button>
-          <button
-            onClick={() => setZoom((z) => Math.max(0.6, +(z - 0.2).toFixed(1)))}
-            className="cursor-pointer border-b border-border p-2.5 text-muted transition-colors hover:text-ink"
-            aria-label="Zoom out"
-          >
-            <TbMinus className="text-[15px]" />
-          </button>
-          <button
-            onClick={() => setZoom(1)}
-            className="cursor-pointer p-2.5 text-muted transition-colors hover:text-ink"
-            aria-label="Reset zoom"
-          >
-            <TbFocus2 className="text-[15px]" />
-          </button>
-        </div>
-
-        <div className="pointer-events-none absolute bottom-3 left-3 z-20 rounded-lg border border-border bg-surface/90 px-3 py-1.5 text-[11px] font-medium text-faint shadow-sm backdrop-blur">
-          Zoom {Math.round(zoom * 100)}%
-        </div>
-
-        {/* Map canvas */}
-        <motion.div
-          animate={{ scale: zoom }}
-          transition={{ type: "spring", stiffness: 180, damping: 24 }}
-          className="grid-texture absolute inset-0"
-        >
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-            {ROADS.map((d, i) => (
-              <path key={i} d={d} stroke="var(--faint)" strokeOpacity={0.35} strokeWidth={0.5} fill="none" vectorEffect="non-scaling-stroke" />
-            ))}
-            {/* Active route lines for in-transit deliveries */}
-            {showDeliveries &&
-              activeDeliveries.slice(0, 10).map((d, i) => (
-                <path
-                  key={d.id}
-                  d={`M ${d.origin.x} ${d.origin.y} Q ${(d.origin.x + d.destinationPoint.x) / 2} ${
-                    (d.origin.y + d.destinationPoint.y) / 2 - 6
-                  } ${d.destinationPoint.x} ${d.destinationPoint.y}`}
-                  stroke="#FF7A1A"
-                  strokeOpacity={0.45}
-                  strokeWidth={0.35}
-                  fill="none"
-                  strokeDasharray="1.4 1.4"
-                  className="animate-dash-move"
-                  vectorEffect="non-scaling-stroke"
-                />
-              ))}
-          </svg>
-
-          {showDeliveries &&
-            activeDeliveries.map((d) => (
-              <div
-                key={d.id}
-                style={{ left: `${d.destinationPoint.x}%`, top: `${d.destinationPoint.y}%` }}
-                className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                title={`${d.id} · ${d.customer}`}
-              >
-                <div className="flex h-4 w-4 items-center justify-center rounded-[4px] border border-signal/50 bg-signal/20 text-signal shadow-sm transition-transform group-hover:scale-125">
-                  <TbPackage className="text-[9px]" />
-                </div>
-              </div>
-            ))}
-
-          {showDrivers &&
-            visibleDrivers.map((d) => (
-              <button
-                key={d.id}
-                onClick={() => setSelectedDriverId(d.id)}
-                style={{ left: `${d.position.x}%`, top: `${d.position.y}%` }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-              >
-                <div className="relative flex items-center justify-center">
-                  {d.status === "On route" && (
-                    <span
-                      className="absolute h-6 w-6 animate-pulse-ring rounded-full"
-                      style={{ background: d.avatarColor }}
-                    />
-                  )}
-                  <div
-                    className={`relative flex h-6 w-6 items-center justify-center rounded-full border-2 text-[9px] font-bold text-white shadow-md transition-transform hover:scale-125 ${
-                      selectedDriverId === d.id ? "border-ink scale-125" : "border-surface"
-                    }`}
-                    style={{ background: d.avatarColor }}
-                  >
-                    {d.initials}
-                  </div>
-                </div>
-              </button>
-            ))}
-        </motion.div>
+        {/* Real interactive map */}
+        <LeafletMap
+          drivers={visibleDrivers}
+          activeDeliveries={activeDeliveries}
+          showDrivers={showDrivers}
+          showDeliveries={showDeliveries}
+          selectedDriverId={selectedDriverId}
+          onSelectDriver={(id) => setSelectedDriverId(id)}
+        />
       </div>
 
       {/* Selected driver / legend panel */}

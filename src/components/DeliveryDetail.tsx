@@ -38,7 +38,7 @@ export default function DeliveryDetail({ delivery, onAdvanceStatus }: DeliveryDe
   }
 
   return (
-    <div className="flex h-full flex-col bg-slate-200/80 dark:bg-slate-900/90">
+    <div className="flex h-full flex-col bg-surface">
       <div className="border-b border-border px-6 py-5">
         <p className="font-mono text-[12px] text-faint">{delivery.id}</p>
         <div className="mt-1 flex items-center gap-2">
