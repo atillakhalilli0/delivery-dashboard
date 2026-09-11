@@ -87,7 +87,8 @@ export default function DeliveriesPage() {
   }
 
   return (
-    <div className="animate-fade-in space-y-4">
+    <div>
+      <div className="animate-fade-in space-y-4">
       <FilterBar
         search={search}
         onSearch={setSearch}
@@ -104,6 +105,7 @@ export default function DeliveriesPage() {
       <DeliveryTable rows={filtered} onSelect={setSelected} />
       <DeliveryCard rows={filtered} onSelect={setSelected} />
 
+    </div>
       <Drawer open={!!selected} onClose={() => setSelected(null)}>
         {selected && <DeliveryDetail delivery={selected} onAdvanceStatus={handleAdvanceStatus} />}
       </Drawer>

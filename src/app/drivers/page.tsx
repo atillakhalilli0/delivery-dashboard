@@ -7,6 +7,7 @@ import DriverTable from "@/components/DriverTable";
 import Drawer from "@/components/Drawer";
 import DriverDetail from "@/components/DriverDetail";
 import { TbSearch } from "react-icons/tb";
+import { div } from "framer-motion/client";
 
 const STATUS_OPTIONS: (DriverStatus | "All")[] = ["All", "On route", "Idle", "Break", "Off duty"];
 
@@ -25,7 +26,8 @@ export default function DriversPage() {
   }, [search, status]);
 
   return (
-    <div className="animate-fade-in space-y-4">
+    <div>
+      <div className="animate-fade-in space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1 sm:max-w-xs">
           <TbSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[15px] text-faint" />
@@ -57,6 +59,7 @@ export default function DriversPage() {
 
       <DriverTable rows={filtered} onSelect={setSelected} />
 
+    </div>
       <Drawer open={!!selected} onClose={() => setSelected(null)} width="max-w-lg">
         {selected && <DriverDetail driver={selected} />}
       </Drawer>
